@@ -6,8 +6,18 @@ import axios from "axios";
     https://api.github.com/users/<your name>
 */
 
-const myData = axios.get("https://api.github.com/users/joseph-fantuzzi");
-console.log(myData);
+// axios
+//   .get("https://api.github.com/users/joseph-fantuzzi")
+//   .then((resp) => {
+//     console.log(resp.data);
+//   })
+//   .catch((err) => {
+//     console.log(err);
+//   })
+//   .finally(() => {
+//     console.log("DONE");
+//   });
+
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
     github info! You will need to understand the structure of this
@@ -21,6 +31,21 @@ console.log(myData);
     and append the returned markup to the DOM as a child of .cards
 */
 
+const cardsDiv = document.querySelector(".cards");
+
+axios
+  .get("https://api.github.com/users/joseph-fantuzzi")
+  .then((resp) => {
+    const myCard = githubCardMaker(resp.data);
+    cardsDiv.appendChild(myCard);
+  })
+  .catch((err) => {
+    console.log(err);
+  })
+  .finally(() => {
+    console.log("DONE");
+  });
+
 /*
   STEP 5: Now that you have your own card getting added to the DOM, either
     follow this link in your browser https://api.github.com/users/<Your github name>/followers,
@@ -32,7 +57,22 @@ console.log(myData);
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const otherUsersArray = ["tetondan", "dustinmyers", "justsml", "luishrd", "bigknell", "crharding"];
+
+otherUsersArray.forEach((user) => {
+  axios
+    .get(`https://api.github.com/users/${user}`)
+    .then((resp) => {
+      const otherCard = githubCardMaker(resp.data);
+      cardsDiv.appendChild(otherCard);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+    .finally(() => {
+      console.log("DONE");
+    });
+});
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -73,7 +113,6 @@ function githubCardMaker(userObj) {
   cardInfoDiv.appendChild(userUserName);
   cardInfoDiv.appendChild(userLocation);
   cardInfoDiv.appendChild(userProfile);
-  userProfile.appendChild(userAddress);
   cardInfoDiv.appendChild(followerCount);
   cardInfoDiv.appendChild(followingCount);
   cardInfoDiv.appendChild(userBio);
@@ -87,12 +126,14 @@ function githubCardMaker(userObj) {
   userName.textContent = userObj.name;
   userUserName.textContent = userObj.login;
   userLocation.textContent = `Location: ${userObj.location}`;
-  userProfile.textContent = "Profile:";
+  userProfile.textContent = "Profile: ";
   userAddress.href = userObj.blog;
   userAddress.textContent = userObj.blog;
   followerCount.textContent = `Followers: ${userObj.followers}`;
   followingCount.textContent = `Following: ${userObj.following}`;
   userBio.textContent = `Bio: ${userObj.bio}`;
+
+  userProfile.appendChild(userAddress);
 
   return divCard;
 }

@@ -32,19 +32,46 @@ import axios from "axios";
 */
 
 const cardsDiv = document.querySelector(".cards");
+const button = document.querySelector("button");
 
-axios
-  .get("https://api.github.com/users/joseph-fantuzzi")
-  .then((resp) => {
-    const myCard = githubCardMaker(resp.data);
-    cardsDiv.appendChild(myCard);
-  })
-  .catch((err) => {
-    console.log(err);
-  })
-  .finally(() => {
-    console.log("DONE");
+function renderCards() {
+  axios
+    .get("https://api.github.com/users/joseph-fantuzzi")
+    .then((resp) => {
+      const myCard = githubCardMaker(resp.data);
+      cardsDiv.appendChild(myCard);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+    .finally(() => {
+      console.log("DONE");
+    });
+
+  const otherUsersArray = ["tetondan", "dustinmyers", "justsml", "luishrd", "bigknell", "crharding", "EmmS21", "MelodyLayne"];
+
+  otherUsersArray.forEach((user) => {
+    axios
+      .get(`https://api.github.com/users/${user}`)
+      .then((resp) => {
+        const otherCard = githubCardMaker(resp.data);
+        cardsDiv.appendChild(otherCard);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        console.log("DONE");
+      });
   });
+
+  cardsDiv.innerHTML = "";
+}
+
+button.addEventListener("click", renderCards);
+button.addEventListener("click", () => {
+  cardsDiv.classList.toggle("cards-active");
+});
 
 /*
   STEP 5: Now that you have your own card getting added to the DOM, either
@@ -56,23 +83,6 @@ axios
     Using that array, iterate over it, requesting data for each user, creating a new card for each
     user, and adding that card to the DOM.
 */
-
-const otherUsersArray = ["tetondan", "dustinmyers", "justsml", "luishrd", "bigknell", "crharding"];
-
-otherUsersArray.forEach((user) => {
-  axios
-    .get(`https://api.github.com/users/${user}`)
-    .then((resp) => {
-      const otherCard = githubCardMaker(resp.data);
-      cardsDiv.appendChild(otherCard);
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-    .finally(() => {
-      console.log("DONE");
-    });
-});
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.

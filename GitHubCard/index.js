@@ -1,9 +1,13 @@
+import axios from "axios";
+
 /*
   STEP 1: using axios, send a GET request to the following URL
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
 */
 
+const myData = axios.get("https://api.github.com/users/joseph-fantuzzi");
+console.log(myData);
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
     github info! You will need to understand the structure of this
@@ -50,6 +54,49 @@ const followersArray = [];
     </div>
 */
 
+function githubCardMaker(userObj) {
+  const divCard = document.createElement("div");
+  const userImg = document.createElement("img");
+  const cardInfoDiv = document.createElement("div");
+  const userName = document.createElement("h3");
+  const userUserName = document.createElement("p");
+  const userLocation = document.createElement("p");
+  const userProfile = document.createElement("p");
+  const userAddress = document.createElement("a");
+  const followerCount = document.createElement("p");
+  const followingCount = document.createElement("p");
+  const userBio = document.createElement("p");
+
+  divCard.appendChild(userImg);
+  divCard.appendChild(cardInfoDiv);
+  cardInfoDiv.appendChild(userName);
+  cardInfoDiv.appendChild(userUserName);
+  cardInfoDiv.appendChild(userLocation);
+  cardInfoDiv.appendChild(userProfile);
+  userProfile.appendChild(userAddress);
+  cardInfoDiv.appendChild(followerCount);
+  cardInfoDiv.appendChild(followingCount);
+  cardInfoDiv.appendChild(userBio);
+
+  divCard.classList.add("card");
+  cardInfoDiv.classList.add("card-info");
+  userName.classList.add("name");
+  userUserName.classList.add("username");
+
+  userImg.src = userObj.avatar_url;
+  userName.textContent = userObj.name;
+  userUserName.textContent = userObj.login;
+  userLocation.textContent = `Location: ${userObj.location}`;
+  userProfile.textContent = "Profile:";
+  userAddress.href = userObj.blog;
+  userAddress.textContent = userObj.blog;
+  followerCount.textContent = `Followers: ${userObj.followers}`;
+  followingCount.textContent = `Following: ${userObj.following}`;
+  userBio.textContent = `Bio: ${userObj.bio}`;
+
+  return divCard;
+}
+
 /*
   List of LS Instructors Github username's:
     tetondan
@@ -57,4 +104,5 @@ const followersArray = [];
     justsml
     luishrd
     bigknell
+    crharding
 */
